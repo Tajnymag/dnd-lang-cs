@@ -1,4 +1,8 @@
-export function sortedFind<T extends unknown>(list: T[], item: T, compare: (a: T, b: T) => number = (a, b) => a < b ? -1 : a > b ? 1 : 0): T | undefined {
+export function sortedFind<T extends unknown>(
+	list: T[],
+	item: T,
+	compare: (a: T, b: T) => number = (a, b) => (a < b ? -1 : a > b ? 1 : 0)
+): T | undefined {
 	let start = 0;
 	let end = list.length - 1;
 
@@ -16,4 +20,10 @@ export function sortedFind<T extends unknown>(list: T[], item: T, compare: (a: T
 	}
 
 	return undefined;
+}
+
+export function sleep(milliseconds: number): Promise<void> {
+	return new Promise((resolve) => {
+		setTimeout(() => resolve(), milliseconds);
+	});
 }

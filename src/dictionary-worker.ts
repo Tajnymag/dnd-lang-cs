@@ -1,15 +1,15 @@
-import { expose } from "comlink";
-import { Dictionary } from "./dictionary";
+import { expose } from 'comlink';
+import { Dictionary } from './dictionary';
 
-export class  DictionaryWorker {
+export class DictionaryWorker {
 	dictionary: Dictionary;
 
 	constructor() {
 		this.dictionary = new Dictionary();
 	}
 
-	isStale() {
-		return this.dictionary.isStale();
+	isPopulated() {
+		return this.dictionary.populated;
 	}
 
 	populate() {
