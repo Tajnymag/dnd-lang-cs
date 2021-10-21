@@ -1,6 +1,7 @@
 <script setup lang="ts">
-import {reactive, ref, watchEffect} from "vue";
-import {useTranslator} from "./translator";
+import { reactive, ref, watchEffect } from "vue";
+import { useTranslator } from "./translator";
+import ReloadPrompt from './ReloadPrompt.vue'
 
 const translator = useTranslator();
 
@@ -22,7 +23,7 @@ const swapDirection = () => {
 
 watchEffect(() => {
   translator.translate(inputText.value, { from: direction.from, to: direction.to }).then(translatedText => outputText.value = translatedText);
-})
+});
 </script>
 
 <template>
@@ -55,6 +56,8 @@ watchEffect(() => {
       </div>
     </div>
   </div>
+
+  <ReloadPrompt/>
 </template>
 
 <style>
