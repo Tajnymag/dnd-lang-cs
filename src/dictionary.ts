@@ -8,20 +8,13 @@ interface DictionaryEntry {
 
 export class Dictionary extends Dexie {
 	entries: Dexie.Table<DictionaryEntry, string>;
-	populated: boolean;
 
 	constructor() {
 		super('Dictionary');
 
-		this.populated = false;
-
-		this.version(1)
-			.stores({
-				entries: 'dnd, *cs',
-			})
-			.upgrade(() => {
-				this.populate().catch(console.error);
-			});
+		this.version(1).stores({
+			entries: 'dnd, *cs',
+		});
 
 		this.entries = this.table('entries');
 	}
@@ -29,6 +22,5 @@ export class Dictionary extends Dexie {
 	async populate() {
 		const blob = await fetch('/dictionary.blob').then((res) => res.blob());
 		await importInto(this, blob, { clearTablesBeforeImport: true });
-		this.populated = true;
 	}
 }

@@ -2,14 +2,14 @@ import { expose } from 'comlink';
 import { Dictionary } from './dictionary';
 
 export class DictionaryWorker {
-	dictionary: Dictionary;
+	private dictionary: Dictionary;
 
 	constructor() {
 		this.dictionary = new Dictionary();
 	}
 
-	isPopulated() {
-		return this.dictionary.populated;
+	async isInitialized() {
+		return (await this.dictionary.entries.count()) > 0;
 	}
 
 	populate() {

@@ -4,7 +4,6 @@ import { Remote, wrap } from 'comlink';
 
 import DictionaryWorker from './dictionary-worker?worker';
 import type { DictionaryWorker as DictionaryWorkerType } from './dictionary-worker';
-import { sleep } from './utils';
 
 export function useTranslator() {
 	const isReady = ref(false);
@@ -48,8 +47,8 @@ export function useTranslator() {
 		if (dictionary === null) {
 			dictionary = await new Dictionary();
 
-			while (!(await dictionary.isPopulated())) {
-				await sleep(100);
+			if (!(await dictionary.isInitialized())) {
+				await dictionary.populate();
 			}
 		}
 
@@ -58,9 +57,16 @@ export function useTranslator() {
 		return dictionary as D;
 	};
 
+	const refresh = async () => {
+		isReady.value = false;
+		await dictionary?.populate();
+		isReady.value = true;
+	};
+
 	return {
 		isReady,
 		dictionary,
 		translate,
+		refresh,
 	};
 }

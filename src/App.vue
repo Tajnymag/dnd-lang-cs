@@ -1,17 +1,17 @@
 <script setup lang="ts">
-import { reactive, ref, watchEffect } from 'vue';
-import { useTranslator } from './translator';
-import ReloadPrompt from './ReloadPrompt.vue';
+import { reactive, ref, watchEffect } from "vue";
+import { useTranslator } from "./translator";
+import ReloadPrompt from "./ReloadPrompt.vue";
 
-const translator = useTranslator();
+const { isReady, refresh, translate } = useTranslator();
 
-const direction = reactive<{ from: 'cs' | 'dnd'; to: 'cs' | 'dnd' }>({
-	from: 'cs',
-	to: 'dnd',
+const direction = reactive<{ from: "cs" | "dnd"; to: "cs" | "dnd" }>({
+	from: "cs",
+	to: "dnd",
 });
 
-const inputText = ref('');
-const outputText = ref('');
+const inputText = ref("");
+const outputText = ref("");
 
 const swapDirection = () => {
 	const { from: newTo, to: newFrom } = direction;
@@ -22,9 +22,9 @@ const swapDirection = () => {
 };
 
 watchEffect(() => {
-	translator
-		.translate(inputText.value, { from: direction.from, to: direction.to })
-		.then((translatedText) => (outputText.value = translatedText));
+	translate(inputText.value, { from: direction.from, to: direction.to }).then(
+		(translatedText) => (outputText.value = translatedText)
+	);
 });
 </script>
 
@@ -33,15 +33,15 @@ watchEffect(() => {
 		<div class="row">
 			<div class="col" />
 			<div class="col-auto text-auto">
-				<span style="min-width: 3ch; display: inline-block">{{
-					direction.from
-				}}</span>
+				<span style="min-width: 3ch; display: inline-block">
+					{{ direction.from }}
+				</span>
 				<button class="btn" @click="swapDirection">
 					<i class="bi-arrow-left-right"></i>
 				</button>
-				<span style="min-width: 3ch; display: inline-block">{{
-					direction.to
-				}}</span>
+				<span style="min-width: 3ch; display: inline-block">
+					{{ direction.to }}
+				</span>
 			</div>
 			<div class="col" />
 		</div>
@@ -65,6 +65,21 @@ watchEffect(() => {
 	</div>
 
 	<ReloadPrompt />
+
+	<div class="navbar fixed-bottom w-100 p-0">
+		<div class="row w-100">
+			<div class="col">
+				<button class="btn" @click="refresh()">
+					<i class="bi-arrow-counterclockwise"></i>
+				</button>
+			</div>
+			<div class="col-auto text-center">
+				<span v-if="isReady">Překladač připraven</span>
+				<span v-else>Překladač se načítá</span>
+			</div>
+			<div class="col"></div>
+		</div>
+	</div>
 </template>
 
 <style>
