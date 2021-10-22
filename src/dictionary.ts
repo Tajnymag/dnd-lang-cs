@@ -1,5 +1,4 @@
 import Dexie from 'dexie';
-import { importInto } from 'dexie-export-import';
 
 interface DictionaryEntry {
 	dnd: string;
@@ -20,7 +19,10 @@ export class Dictionary extends Dexie {
 	}
 
 	async populate() {
-		const blob = await fetch('/dictionary.blob').then((res) => res.blob());
-		await importInto(this, blob, { clearTablesBeforeImport: true });
+		const dictionary = await fetch('/dictionary.json').then((res) =>
+			res.json()
+		);
+		await this.entries.clear();
+		await this.entries.bulkPut(dictionary);
 	}
 }
